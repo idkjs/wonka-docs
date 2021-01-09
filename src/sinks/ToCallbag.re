@@ -41,6 +41,14 @@ let callbag = Wonka.fromArray([|1, 2, 3|])
 // for example, some annotations is only meaningful in externals
 // probably need a better error here. Seems the appropriate error should be
 // `  Toplevel expression is expected to have unit type.`
+// This code doesnt do anything
 let _ = callbagIterate(. value => {
   print_int(value);
 })(. callbag);
+
+// this works
+[@bs.module] external callbagFromArray:
+  array('a) => Wonka_callbag.callbagT('a) = "callbag-from-iter";
+let callbag = callbagFromArray([|1, 2, 3|]);
+let _ = Wonka.fromCallbag(callbag)
+  |> Wonka.subscribe((. x) => Js.log(x));
